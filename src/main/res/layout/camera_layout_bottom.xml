@@ -5,28 +5,63 @@
     android:layout_alignParentBottom="true"
     android:background="@android:color/transparent">
 
-    <ImageButton
-        android:layout_width="wrap_content"
+    <com.example.zhuyuqiang.bearcamera.ModePickerView
+        android:id="@+id/mode_picker_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_thumbnail_button_24dp" />
+        android:orientation="horizontal">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_camera_shutter_button_48dp" />
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:text="normal1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:text="hello"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:text="world"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:text="zhuyuqiang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.example.zhuyuqiang.bearcamera.ModePickerView>
 
-    <ImageButton
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_below="@id/mode_picker_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_camera_switch_button_48dp" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_thumbnail_button_24dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_camera_shutter_button_48dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_camera_switch_button_48dp" />
+    </RelativeLayout>
 
 </RelativeLayout>

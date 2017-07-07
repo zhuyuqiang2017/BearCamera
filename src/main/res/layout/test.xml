@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <com.example.zhuyuqiang.bearcamera.ModePickerView
+        android:id="@+id/mode_picker_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="normal1" />
+
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hello" />
+
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="world" />
+
+        <TextView
+            style="@style/mode_picker_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="zhuyuqiang" />
+    </com.example.zhuyuqiang.bearcamera.ModePickerView>
+</LinearLayout>
