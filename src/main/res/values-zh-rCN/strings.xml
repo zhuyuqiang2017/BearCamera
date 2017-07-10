@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">个人相机</string>
+    <string name="photo_mode">拍照</string>
+    <string name="video_mode">录像</string>
+</resources>

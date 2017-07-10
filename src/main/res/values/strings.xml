@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BearCamera</string>
+    <string name="photo_mode">Photo</string>
+    <string name="video_mode">Video</string>
 </resources>

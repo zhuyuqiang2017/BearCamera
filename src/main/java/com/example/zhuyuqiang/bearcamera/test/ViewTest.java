@@ -18,6 +18,7 @@ public class ViewTest extends AppCompatActivity {
 
     private ModePickerView mModePicker;
     private G mG;
+    float origin = 0.0f;
     private GestureDetector mDector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,15 +31,35 @@ public class ViewTest extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mDector.onTouchEvent(event);
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                origin = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                if((event.getX()-origin)>10.0f){
+                    mModePicker.setCurrentMode(true);
+                }
+                if((event.getX()-origin)<-10.0f){
+                    mModePicker.setCurrentMode(false);
+                }
+                break;
+        }
+        return true;
+//        return mDector.onTouchEvent(event);
     }
 
     private class G extends GestureDetector.SimpleOnGestureListener{
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            mModePicker.setMovement((int)(distanceX+0.5f));
+            if(distanceX>10.0f){
+                mModePicker.setCurrentMode(true);
+            }
+            if(distanceX<-10.0f){
+                mModePicker.setCurrentMode(false);
+            }
             LogUtil.I("zyq","distanceX = "+distanceX);
             return true;
         }
+
     }
 }
