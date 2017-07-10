@@ -15,6 +15,7 @@ public class PermissionManager {
     private final String TAG = "PermissionManager";
     private final int PERMISSION_CAMERA_LAUNCH_CODE = 99;
     private final String PERMISSION_CAMERA = "android.permission.CAMERA";
+    private final String PERMISSION_AUDIO = "android.permission.RECORD_AUDIO";
     private final String PERMISSION_WRITE_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
     private final String PERMISSION_READ_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
     private String[] mPermissions;
@@ -34,6 +35,9 @@ public class PermissionManager {
         }
         if(mContext.checkSelfPermission(PERMISSION_WRITE_STORAGE)!= PackageManager.PERMISSION_GRANTED){
             mPermissionList.add(PERMISSION_WRITE_STORAGE);
+        }
+        if(mContext.checkSelfPermission(PERMISSION_AUDIO)!= PackageManager.PERMISSION_GRANTED){
+            mPermissionList.add(PERMISSION_AUDIO);
         }
         if(mContext.checkSelfPermission(PERMISSION_READ_STORAGE)!= PackageManager.PERMISSION_GRANTED){
             mPermissionList.add(PERMISSION_READ_STORAGE);

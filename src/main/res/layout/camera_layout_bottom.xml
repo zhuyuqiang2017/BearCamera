@@ -38,13 +38,13 @@
             android:src="@drawable/ic_thumbnail_button_24dp" />
 
         <ImageButton
-            android:onClick="test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/camera_action"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_camera_shutter_button_48dp" />
+            />
 
         <ImageButton
             android:layout_width="wrap_content"

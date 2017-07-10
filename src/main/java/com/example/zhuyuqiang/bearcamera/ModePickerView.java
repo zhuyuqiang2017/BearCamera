@@ -21,9 +21,10 @@ public class ModePickerView extends LinearLayout {
     private int mCurrentMode = 0;
     private int mWidth = 0;
     private int mHeight = 0;
-    private int mLeft = -100;
     private int mChildWidth = 0;
     private int mNormalHeight = 0;
+    public static final int MODE_PHOTO = 0;
+    public static final int MODE_VIDEO = 1;
     private CameraModeChangeListener mListener;
 
     public interface CameraModeChangeListener{
@@ -43,12 +44,12 @@ public class ModePickerView extends LinearLayout {
     }
 
     public int getCurrentMode(){
-        if (mCurrentMode>0 && mCurrentMode<=(mChildCount-1)){
+        LogUtil.I(TAG, "mCurrentMode=" + mCurrentMode);
+        if (mCurrentMode>=0 && mCurrentMode<=(mChildCount-1)){
             return mCurrentMode;
         }else{
             return -1;
         }
-
     }
 
     public void setCurrentMode(boolean add) {
@@ -99,11 +100,12 @@ public class ModePickerView extends LinearLayout {
         int Left = (mWidth / 2 - mChildWidth);
         for (int i = 0; i < mChildCount; i++) {
             View view = getChildAt(i);
-            LogUtil.I(TAG, "i = " + i + ",Child width = " + view.getMeasuredWidth() + ",Child height=" + view.getMeasuredHeight() + ",mLeft = " + mLeft);
+            LogUtil.I(TAG, "i = " + i + ",Child width = " + view.getMeasuredWidth() + ",Child height=" + view.getMeasuredHeight() + ",mLeft = " + Left);
             if (i == mCurrentMode) {
                 view.layout(Left, top, Left + view.getMeasuredWidth(), view.getMeasuredHeight());
             } else {
-                view.layout(Left, top + (mHeight - mNormalHeight) / 2, Left + view.getMeasuredWidth(), view.getMeasuredHeight());
+//                view.layout(Left, top+(mHeight - mNormalHeight) / 2, Left + view.getMeasuredWidth(), view.getMeasuredHeight());
+                view.layout(Left, top+(mHeight - mNormalHeight) / 2, Left + view.getMeasuredWidth(), bottom-(mHeight - mNormalHeight) / 2);
             }
             Left = Left + view.getMeasuredWidth();
         }

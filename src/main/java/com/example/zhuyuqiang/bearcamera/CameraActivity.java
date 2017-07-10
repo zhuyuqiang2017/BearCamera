@@ -1,13 +1,23 @@
 package com.example.zhuyuqiang.bearcamera;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CameraActivity extends BaseActivity {
 
@@ -16,6 +26,9 @@ public class CameraActivity extends BaseActivity {
     private PreviewCallBack mPreviewCallBack;
     private Camera mCamera;
     private Camera.Parameters mParameters;
+    private ImageButton mShutter;
+    private boolean startRecording = false;
+    private MediaRecorder mMediaRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +37,28 @@ public class CameraActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
         mViewManager.setModePickerView((ModePickerView) findViewById(R.id.mode_picker_container));
+        mShutter = (ImageButton) findViewById(R.id.camera_action);
+        mShutter.setOnClickListener(new ClickListener());
         mViewManager.setCameraModeChangeListener(new ModeChangeListener());
         mPreviewCallBack = new PreviewCallBack();
         mCameraPreview.getHolder().addCallback(mPreviewCallBack);
+        initCameraShutter();
+    }
+
+    private void initCameraShutter(){
+        int mode = mViewManager.getCurrentMode();
+        LogUtil.I(TAG,"initCameraShutter..."+"mode="+mode);
+        switch (mode){
+            case ModePickerView.MODE_PHOTO:
+                mShutter.setImageDrawable(getDrawable(R.drawable.ic_camera_shutter_button_48dp));
+                break;
+            case ModePickerView.MODE_VIDEO:
+                mShutter.setImageDrawable(getDrawable(R.drawable.video_button));
+                break;
+            default:
+                mShutter.setImageDrawable(getDrawable(R.drawable.ic_camera_shutter_button_48dp));
+                break;
+        }
     }
 
     private class PreviewCallBack implements SurfaceHolder.Callback{
@@ -111,6 +143,14 @@ public class CameraActivity extends BaseActivity {
         @Override
         public void onCameraModeChange(int currentMode) {
             LogUtil.I(TAG,"ModeChangeListener::onCameraModeChange...");
+            switch (currentMode){
+                case ModePickerView.MODE_PHOTO:
+                    mShutter.setImageDrawable(getDrawable(R.drawable.ic_camera_shutter_button_48dp));
+                    break;
+                case ModePickerView.MODE_VIDEO:
+                    mShutter.setImageDrawable(getDrawable(R.drawable.video_button));
+                    break;
+            }
         }
     }
 
@@ -135,17 +175,99 @@ public class CameraActivity extends BaseActivity {
         }
     }
 
-    public void test(View view){
-        LogUtil.I(TAG,"test...");
-//        mCamera.autoFocus(new FocusListener());
-//        mCamera.stopPreview();
-        mCamera.takePicture(new ShutterListener(),null,null,new PictureListener());
+//    public void test(View view){
+//        LogUtil.I(TAG,"test...");
+//        mCamera.takePicture(new ShutterListener(),null,null,new PictureListener());
+//    }
+
+    private class ClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            int mode = mViewManager.getCurrentMode();
+            switch (mode){
+                case ModePickerView.MODE_PHOTO:
+//                    mCamera.unlock();
+                    mCamera.takePicture(new ShutterListener(),null,null,new PictureListener());
+//                    mCamera.lock();
+                    break;
+                case ModePickerView.MODE_VIDEO:
+                    startRecordVideo();
+                    break;
+            }
+        }
+    }
+
+    private void startRecordVideo() {
+        if(!startRecording){
+            mShutter.setImageDrawable(getDrawable(R.drawable.ic_camera_video_stop_48dp));
+            mCamera.unlock();
+            mMediaRecorder = new MediaRecorder();
+            mMediaRecorder.reset();
+            mMediaRecorder.setCamera(mCamera);
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            CamcorderProfile mCamcorderProfile = CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK,
+                    CamcorderProfile.QUALITY_HIGH);
+            mMediaRecorder.setProfile(mCamcorderProfile);
+            mMediaRecorder.setOutputFile(getOutputMediaFile(0));
+            mMediaRecorder.setPreviewDisplay(mCameraPreview.getHolder().getSurface());
+            try {
+                mMediaRecorder.prepare();
+            } catch (IOException e) {
+                startRecording = false;
+                Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+                mCamera.lock();
+            }
+//            mMediaRecorder.start();
+            startRecording = true;
+        }else{
+            mShutter.setImageDrawable(getDrawable(R.drawable.ic_camera_video_button_48dp));
+//            mMediaRecorder.stop();
+            mMediaRecorder.release();
+//            mCamera.lock();
+            try {
+                mCamera.reconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            startRecording = false;
+        }
+    }
+
+    private String getOutputMediaFile(int type) {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "Camera App");
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+//        if (type == MEDIA_TYPE_IMAGE){
+//            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+//                    "IMG_"+ timeStamp + ".jpg");
+//        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_"+ timeStamp + ".mp4");
+//        } else {
+//            return null;
+//        }
+
+        return mediaStorageDir.getPath() + File.separator +
+                "VID_"+ timeStamp + ".mp4";
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         LogUtil.I(TAG,"onDestroy...");
+        if(mMediaRecorder != null){
+            mMediaRecorder.release();
+        }
         if(mCamera != null){
             mCamera.release();
         }
